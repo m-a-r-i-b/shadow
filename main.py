@@ -1,13 +1,8 @@
+from shadow_agent import ShadowAgent
 
 
-# some agents can be less powerful than others
-init_agents()
+prompt = "add a button to decrement count below the increment button and commit code with appropriate message"
 
+shadow_agent = ShadowAgent()
+shadow_agent.run(prompt)
 
-prompt = "test task1 test task2"
-identified_tasks = identifyTasks(prompt)
-
-for task in identified_tasks:
-
-    relevant_agent = identifyAgent(task)
-    relevant_agent.execute(task)
