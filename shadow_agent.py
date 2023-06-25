@@ -6,16 +6,16 @@ from langchain.llms import OpenAI
 from dotenv import load_dotenv
 load_dotenv(".env")
 
-from config import SHADOW_AGENT_LLM, CHANGE_CODE_AGENT_LLM,VERSION_CONTROL_AGENT_LLM
-from sub_agents.change_code import ChangeCodeAgent
-from sub_agents.version_control import VersionControlAgent
+from config import MODIFY_CODE_TOOL_LLM, MODIFY_CODE_TOOL_TEMP, SHADOW_AGENT_TEMP, SHADOW_AGENT_LLM, VERSION_CONTROL_TOOL_LLM, VERSION_CONTROL_TOOL_TEMP
+from tools.modify_code_tool import ModifyCodeTool
+from tools.version_control_tool import VersionControlTool
 
 
 class ShadowAgent:
     def __init__(self) -> None:
 
         # llm = OpenAI(model=SHADOW_AGENT_LLM)
-        llm = ChatOpenAI(temperature=0.1, model=SHADOW_AGENT_LLM)
+        llm = ChatOpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
         self._agent = initialize_agent(
             self.get_tools(), llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
         )
@@ -27,12 +27,12 @@ class ShadowAgent:
         return [
         Tool(
             name="VersionControlTool",
-            func=VersionControlAgent(OpenAI()).execute_task,
+            func=VersionControlTool(ChatOpenAI()).execute_task,
             description="""Use it to commit changes to a git repo or create new git branches""",
         ),
         Tool(
             name="ChangeCodeTool",
-            func=ChangeCodeAgent(OpenAI()).execute_task,
+            func=ModifyCodeTool(OpenAI()).execute_task,
             description="""Use it to change an existing code file""",
         ),
         ]
