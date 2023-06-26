@@ -48,10 +48,10 @@ def get_prompt_template():
     ```
 
     That is the format. Begin!
-    Task: {tasklet}"""
+    Task: {question}"""
 
     return PromptTemplate(
-        input_variables=["tasklet"],
+        input_variables=["question"],
         template=prompt_template,
         output_parser=BashOutputParser(),
     )
