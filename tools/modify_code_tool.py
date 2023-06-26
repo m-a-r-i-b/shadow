@@ -7,13 +7,13 @@ from langchain.vectorstores import FAISS
 
 from tools.base_tool import BaseTool
 from config import PROJ_ROOT_DIR
-from prompt_templates.modify_code_prompt import prompt_template
+from prompt_templates.modify_code_prompt import get_formatted_prompt
 
 class ModifyCodeTool(BaseTool):
     def __init__(self, llm) -> None:
         self._llm = llm
-        self._prompt = prompt_template
         self._db = self._loadDB()
+
 
     def _loadDB(self):
       embeddings = OpenAIEmbeddings(disallowed_special=())
@@ -49,7 +49,9 @@ class ModifyCodeTool(BaseTool):
         
       return db
 
+
     # Vector search to return the file user is asking to modify
+    # TODO : Maybe change to RetrivalChain? for better context understanding
     def _find_relevant_file(self, user_query: str):
       docs = self._db.similarity_search(user_query)
       
@@ -59,7 +61,7 @@ class ModifyCodeTool(BaseTool):
       return docs[0].metadata, docs[0].page_content
 
 
-    def execute_task(self, tasklet):
+    def _execute_task(self, tasklet):
         # Find relevant file to make changes to
         filePath, fileContents = self._find_relevant_file(tasklet)
         
@@ -70,11 +72,16 @@ class ModifyCodeTool(BaseTool):
           return "Was unable to perform given task, maybe try again with full context of the task"
 
         # Configure prompt template
-        self._prompt.format(tasklet=tasklet,initial_code=fileContents)
+        prompt = get_formatted_prompt(tasklet=tasklet,initial_code=fileContents)
         
         # Get raw result and return parsed output
-        raw_result = self._llm(self._prompt)
+        raw_result = self._llm(prompt)
         print("raw_result = ",raw_result)
+
+        # Extract relevant output
+        output = self._parse_output(raw_result)
+        print("output = ",output)
+
 
 
         # Extract code from result and update to file
@@ -84,8 +91,5 @@ class ModifyCodeTool(BaseTool):
 
 
     def _parse_output(self, result):
-
-        if self.stop_string in result:
-            result = result.split(self.stop_string)[1]
-        return result
+        return result.content
     

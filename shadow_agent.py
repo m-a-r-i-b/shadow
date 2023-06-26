@@ -27,12 +27,12 @@ class ShadowAgent:
         return [
         Tool(
             name="VersionControlTool",
-            func=VersionControlTool(ChatOpenAI()).execute_task,
+            func=VersionControlTool(OpenAI())._execute_task,
             description="""Use it to commit changes to a git repo or create new git branches""",
         ),
         Tool(
             name="ChangeCodeTool",
-            func=ModifyCodeTool(OpenAI()).execute_task,
+            func=ModifyCodeTool(ChatOpenAI())._execute_task,
             description="""Use it to change an existing code file""",
         ),
         ]

@@ -1,13 +1,24 @@
 from tools.base_tool import BaseTool
-from prompt_templates.modify_code_prompt import prompt_template
+from prompt_templates.modify_code_prompt import get_formatted_prompt
+import time
+from langchain.chains import LLMBashChain
 
 class VersionControlTool(BaseTool):
     def __init__(self, llm) -> None:
-        self.llm = llm
-        self._prompt = prompt_template
+        self.bash_chain = LLMBashChain.from_llm(llm, verbose=True)
+
+        # self._prompt = get_formatted_prompt
 
 
-    def execute_task(self, tasklet):
+    def _execute_task(self, tasklet):
+        print("received arg = ",tasklet)
+
+        print("===Before===")
+        self.bash_chain.run(tasklet)
+        print("====After===")
+
+
+        time.sleep(2)
         return "Job is done"
     
 
