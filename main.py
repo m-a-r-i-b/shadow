@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv(".env")
+
 from shadow_agent import ShadowAgent
 
 

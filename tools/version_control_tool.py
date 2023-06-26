@@ -1,11 +1,11 @@
-from tools.base_tool import BaseTool
+from prompt_templates.version_control_prompt import get_prompt_template
 from prompt_templates.modify_code_prompt import get_formatted_prompt
 import time
 from langchain.chains import LLMBashChain
 
-class VersionControlTool(BaseTool):
+class VersionControlTool():
     def __init__(self, llm) -> None:
-        self.bash_chain = LLMBashChain.from_llm(llm, verbose=True)
+        self.bash_chain = LLMBashChain.from_llm(llm, prompt=get_prompt_template(), verbose=True)
 
         # self._prompt = get_formatted_prompt
 

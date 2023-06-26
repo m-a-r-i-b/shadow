@@ -5,11 +5,10 @@ from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 
-from tools.base_tool import BaseTool
 from config import PROJ_ROOT_DIR
 from prompt_templates.modify_code_prompt import get_formatted_prompt
 
-class ModifyCodeTool(BaseTool):
+class ModifyCodeTool():
     def __init__(self, llm) -> None:
         self._llm = llm
         self._db = self._loadDB()
