@@ -50,6 +50,7 @@ def get_prompt_template():
     That is the format. Begin!
     Task: {question}"""
 
+    # TODO : For some reason only 'question' variable is accepted, nothing else works
     return PromptTemplate(
         input_variables=["question"],
         template=prompt_template,
