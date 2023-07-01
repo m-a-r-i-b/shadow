@@ -55,7 +55,7 @@ class ShadowAgent:
             description="""Use it to commit changes to a git repo or create new git branches""",
         ),
         Tool(
-            name="ChangeCodeTool",
+            name="ModifyCodeTool",
             func=ModifyCodeTool(ChatOpenAI())._execute_task,
             description="""Use it to change an existing code file""",
         ),
