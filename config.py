@@ -1,6 +1,6 @@
 # some agents can be less powerful than others
 SHADOW_AGENT_LLM = "gpt-3.5-turbo"
-SHADOW_AGENT_TEMP = 0.01
+SHADOW_AGENT_TEMP = 0
 
 MODIFY_CODE_TOOL_LLM = "gpt-3.5-turbo"
 MODIFY_CODE_TOOL_TEMP = 0

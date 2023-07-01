@@ -38,14 +38,16 @@ def get_prompt_template():
     I need to take the following actions:
     - Create a new branch
     - Stage all files
-    - Commit the changes with appropriate message '<message_here>'
-    - Push the changes
+    - Commit the changes with an appropriate message '<message_here>'
+    - Push the changes to new branch
     ```bash
     git checkout -b test-branch
     git add .
     git commit -m "<message_here>"
-    git push
+    git push --set-upstream origin test-branch
     ```
+
+    Remember that you need to commit changes before you push. And you need to stage changes before you commit.
 
     That is the format. Begin!
     Task: {question}"""
