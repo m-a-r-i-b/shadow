@@ -39,12 +39,12 @@ def get_prompt_template():
     - Create a new branch
     - Stage all files
     - Commit the changes with appropriate message '<message_here>'
-    - Push the changes
+    - Push the changes to new branch
     ```bash
     git checkout -b test-branch
     git add .
     git commit -m "<message_here>"
-    git push
+    git push --set-upstream origin test-branch
     ```
 
     Remember that you need to commit changes before you push. And you need to stage changes before you commit.
