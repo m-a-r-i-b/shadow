@@ -15,7 +15,7 @@ Use the following format:
 Task: the task you must perform
 Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
-Action Input: a part of the original instruction, should be from "{input}". And can contain contextual information relevant for the action
+Action Input: a part of the original instruction and can contain contextual information relevant for the action, should be from "{input}".
 Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat N times)
 Thought: I have now performed all tasks
