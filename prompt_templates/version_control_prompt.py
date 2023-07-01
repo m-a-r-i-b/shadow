@@ -47,6 +47,8 @@ def get_prompt_template():
     git push
     ```
 
+    Remember that you need to commit changes before you push. And you need to stage changes before you commit.
+
     That is the format. Begin!
     Task: {question}"""
 
