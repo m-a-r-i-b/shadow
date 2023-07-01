@@ -6,7 +6,7 @@ from langchain.agents import Tool
 # TODO : Modify prompt to better formulate 'action input'
 
 # Set up the base template
-prompt_template = """Answer the following questions as best you can, but speaking as a pirate might speak. You have access to the following tools:
+prompt_template = """Answer the following questions as best you can. You have access to the following tools:
 
 {tools}
 

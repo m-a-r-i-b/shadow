@@ -34,6 +34,7 @@ class ShadowAgent:
         agent_template = LLMSingleActionAgent(
             llm_chain=llm_chain,
             output_parser=output_parser,
+            # TODO : Figure out if this STOP and AGENTFINISH are correlated
             stop=["\nObservation:"],
             allowed_tools=tool_names
         )
@@ -67,6 +68,7 @@ class CustomOutputParser(AgentOutputParser):
 
     def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
         # Check if agent should finish
+        # TODO : Figure out of the STOP above is correlated
         if "Final Answer:" in llm_output or "Job is done" in llm_output:
             return AgentFinish(
                 # Return values is generally always a dictionary with a single `output` key
