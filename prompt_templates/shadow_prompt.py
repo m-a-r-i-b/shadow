@@ -21,7 +21,7 @@ Observation: the result of the action
 Thought: I have now performed all tasks
 Final Answer: the final answer to the original task
 
-Note : In the action input, You can add the commit message or branch name if required, based on previous task.
+Note : For the Action Input, you can add the commit message or branch name that represents the previous task.
 
 Begin!
 
