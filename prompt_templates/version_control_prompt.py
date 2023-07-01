@@ -25,7 +25,7 @@ def get_prompt_template():
     Task: "Stage all files, commit and push the changes to current branch"
     I need to take the following actions:
     - Stage all files
-    - Commit the changes with appropriate message '<message_here>'
+    - Commit the changes with relevant message '<message_here>' or simply empty string ''
     - Push the changes
     ```bash
     git add .
