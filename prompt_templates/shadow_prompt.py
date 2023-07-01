@@ -6,27 +6,27 @@ from langchain.agents import Tool
 # TODO : Modify prompt to better formulate 'action input'
 
 # Set up the base template
-prompt_template = """Answer the following questions as best you can. You have access to the following tools:
+prompt_template = """You will be given instruction to perform tasks. You have access to the following tools:
 
 {tools}
 
 Use the following format:
 
-Question: the input question you must answer
+Task: the task you must perform
 Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
-Action Input: part of the question that is relevant for current action
+Action Input: a part of the original instruction, should be from "{input}"
 Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat N times)
-Thought: I now know the final answer
-Final Answer: the final answer to the original input question
+Thought: I have now performed all tasks
+Final Answer: the final answer to the original task
 
 Begin!
 
 Previous conversation history:
 {history}
 
-New question: {input}
+New Task: {input}
 {agent_scratchpad}"""
 
 

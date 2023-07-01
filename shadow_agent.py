@@ -26,7 +26,7 @@ class ShadowAgent:
         tools = self.get_tools()
 
         # LLM chain consisting of the LLM and a prompt
-        llm_chain = LLMChain(llm=llm, prompt=get_prompt_template(tools))
+        llm_chain = LLMChain(llm=llm, prompt=get_prompt_template(tools), verbose=True)
         tool_names = [tool.name for tool in tools]
         memory = ConversationBufferWindowMemory(k=2)
 
