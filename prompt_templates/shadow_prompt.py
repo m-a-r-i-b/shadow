@@ -13,7 +13,6 @@ prompt_template = """Answer the following questions as best you can. You have ac
 Use the following format:
 
 Question: the input question you must answer
-Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
 Action Input: part of the question that is relevant for current action
 Observation: the result of the action
