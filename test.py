@@ -4,11 +4,13 @@ from utils import get_tool_list
 load_dotenv(".env")
 
 
-tools = get_tool_list()
-vc = tools[0].func
+# write_to_file('../test-app/src/App.js','temp')
 
-prompt = 'Stage, commit and then push the code in current branch'
-context = "added decrement button"
+# tools = get_tool_list()
+# vc = tools[0].func
 
-vc(prompt,context)
+# prompt = 'Stage, commit and then push the code in current branch'
+# context = "added decrement button"
+
+# vc(prompt,context)
 

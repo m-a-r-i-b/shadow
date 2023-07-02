@@ -35,7 +35,6 @@ class ModifyCodeTool():
                           pass
           print(f"Total docs found : {len(docs)}")
 
-
           print("Starting chunking...")
           text_splitter = CharacterTextSplitter(chunk_size=4000, chunk_overlap=0)
           texts = text_splitter.split_documents(docs)
@@ -47,17 +46,6 @@ class ModifyCodeTool():
           db.save_local(PROJ_WORK_DIR)
         
       return db
-
-
-    # Vector search to return the file user is asking to modify
-    # TODO : Maybe change to RetrivalChain? for better context understanding
-    def _find_relevant_file(self, user_query: str):
-      docs = self._db.similarity_search(user_query)
-      
-      if len(docs) == 0:
-        return None, None
-      
-      return docs[0].metadata['source'], docs[0].page_content
 
 
     def execute_task(self, tasklet, _):
@@ -78,16 +66,31 @@ class ModifyCodeTool():
         print("raw_result = ",raw_result)
 
         # Extract relevant output
-        output = self._parse_output(raw_result)
-        print("output = ",output)
-
-
+        new_file_contents = self._parse_output(raw_result)
+        print("output = ",new_file_contents)
 
         # TODO
         # Extract code from result and update to file
         # return self._parse_output(raw_result)
+        self._write_to_file(file_path,new_file_contents)
+
+    # Vector search to return the file user is asking to modify
+    # TODO : Maybe change to RetrivalChain? for better context understanding
+    def _find_relevant_file(self, user_query: str):
+      docs = self._db.similarity_search(user_query)
+      
+      if len(docs) == 0:
+        return None, None
+      
+      return docs[0].metadata['source'], docs[0].page_content
 
 
     def _parse_output(self, result):
         return result.content
+
+
+    def _write_to_file(self, file_path: str, contents: str):
+        with open(file_path, 'w') as file:
+            file.write(contents)
+
     
