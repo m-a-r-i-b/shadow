@@ -1,15 +1,10 @@
-from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent, AgentOutputParser
 from langchain.prompts import StringPromptTemplate
 from langchain import SerpAPIWrapper, LLMChain
 from typing import List, Union
 from langchain.schema import AgentAction, AgentFinish, OutputParserException
 import re
 from prompt_templates.shadow_prompt import get_prompt_template
-from tools.modify_code_tool import ModifyCodeTool
-from tools.version_control_tool import VersionControlTool
-from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
-from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferWindowMemory
 
 
@@ -19,47 +14,21 @@ from config import MODIFY_CODE_TOOL_LLM, MODIFY_CODE_TOOL_TEMP, SHADOW_AGENT_TEM
 class ShadowAgent:
     def __init__(self) -> None:
 
-        # llm = OpenAI(model=SHADOW_AGENT_LLM)
-        llm = ChatOpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
-        output_parser = CustomOutputParser()
+        llm = OpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
 
         tools = self.get_tools()
 
-        # LLM chain consisting of the LLM and a prompt
-        llm_chain = LLMChain(llm=llm, prompt=get_prompt_template(tools), verbose=True)
-        tool_names = [tool.name for tool in tools]
-        memory = ConversationBufferWindowMemory(k=2)
+        prompt_template = get_prompt_template(tools)
+        
+        
+        parser = PydanticOutputParser(pydantic_object=TaskList)
 
-
-        agent_template = LLMSingleActionAgent(
-            llm_chain=llm_chain,
-            output_parser=output_parser,
-            # TODO : Figure out if this STOP and AGENTFINISH are correlated
-            stop=["\nObservation:"],
-            allowed_tools=tool_names
-        )
-
-        self._agent = AgentExecutor.from_agent_and_tools(
-            agent=agent_template, tools=tools, verbose=True,memory=memory)
 
 
     def run(self,task):
         self._agent.run(task)
 
-
-    def get_tools(self):
-        return [
-        Tool(
-            name="VersionControlTool",
-            func=VersionControlTool(OpenAI())._execute_task,
-            description="""Use it to commit changes to a git repo or create new git branches""",
-        ),
-        Tool(
-            name="ModifyCodeTool",
-            func=ModifyCodeTool(ChatOpenAI())._execute_task,
-            description="""Use it to change an existing code file""",
-        ),
-        ]
+        
 
 
 
