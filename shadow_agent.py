@@ -50,7 +50,7 @@ class ShadowAgent:
         for task in task_list:
             print("Tool Name = ",task.tool_name)
             print("Instruction = ",task.instruction)
-            self._context += task.instruction
             self.perform_task(task)
+            self._context += task.instruction
 
 
