@@ -68,7 +68,7 @@ class ModifyCodeTool():
         print("contents = ",fileContents)
         # Was unable to find relevant file or grab contents
         if (filePath or fileContents) is None:
-          return "Was unable to perform given task, maybe try again with full context of the task"
+          print("Was unable to perform given task, maybe try again with full context of the task")
 
         # Configure prompt template
         prompt = get_formatted_prompt(tasklet=tasklet,initial_code=fileContents)
@@ -85,7 +85,6 @@ class ModifyCodeTool():
 
         # Extract code from result and update to file
 
-        return "code has been modified"
         # return self._parse_output(raw_result)
 
 
