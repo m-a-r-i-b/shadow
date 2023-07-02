@@ -4,10 +4,10 @@ load_dotenv(".env")
 from shadow_agent import ShadowAgent
 
 
-# prompt = "add a button to decrement count below the increment button. Once done, commit code with appropriate message"
-# prompt = "add a button to decrement count below the increment button. After that stage, commit and push the code in current branch with appropriate commit message"
-prompt = "add a button to decrement count, below the increment button. After that stage, commit and then push the code in current branch"
+# instructions = "add a button to decrement count below the increment button. After that stage, commit and push the code in current branch with appropriate commit message"
+instructions = "add a button to decrement count, below the increment button. After that stage, commit and then push the code in current branch"
+# instructions = "Change the increment logic to add 2"
 
 shadow_agent = ShadowAgent()
-shadow_agent.run(prompt)
+shadow_agent.execute(instructions)
 

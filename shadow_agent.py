@@ -1,58 +1,53 @@
-from langchain.prompts import StringPromptTemplate
-from langchain import SerpAPIWrapper, LLMChain
-from typing import List, Union
-from langchain.schema import AgentAction, AgentFinish, OutputParserException
-import re
+from typing import List
+from models.Task import Task
+from models.TaskList import TaskList
 from prompt_templates.shadow_prompt import get_prompt_template
 from langchain.llms import OpenAI
-from langchain.memory import ConversationBufferWindowMemory
+from langchain.output_parsers import PydanticOutputParser
+from langchain.agents import Tool
 
 
-from config import MODIFY_CODE_TOOL_LLM, MODIFY_CODE_TOOL_TEMP, SHADOW_AGENT_TEMP, SHADOW_AGENT_LLM, VERSION_CONTROL_TOOL_LLM, VERSION_CONTROL_TOOL_TEMP
+from config import SHADOW_AGENT_TEMP, SHADOW_AGENT_LLM
+from utils import get_tool_list
 
+
+# TODO:
+# 1 - Move test app outside
+# 2 - Modify bashline to start form project prefix path
+# 3 - Modify bashline to account for history
+# 4 - Add whisper ai
 
 class ShadowAgent:
     def __init__(self) -> None:
+        self._llm = OpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
+        self._tools : List[Tool] = get_tool_list()
+        self._parser = PydanticOutputParser(pydantic_object=TaskList)
+        self._prompt_template = get_prompt_template(self._tools,self._parser)
 
-        llm = OpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
-
-        tools = self.get_tools()
-
-        prompt_template = get_prompt_template(tools)
-        
-        
-        parser = PydanticOutputParser(pydantic_object=TaskList)
-
-
-
-    def run(self,task):
-        self._agent.run(task)
-
-        
+    def get_tool(self, tool_name: str):
+        for tool in self._tools:
+            if tool.name.strip() == tool_name.strip():
+                return tool.func
 
 
+    def perform_task(self, task: Task):
+        tool_name = task.tool_name
+        tool = self.get_tool(tool_name)
+        instruction = task.instruction
+        tool(instruction)
 
 
-class CustomOutputParser(AgentOutputParser):
+    def execute(self,instructions):
+        _input = self._prompt_template.format(instruction=instructions)
+        output = self._llm(_input)
+        taskList: TaskList = self._parser.parse(output)
 
-    def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
-        # Check if agent should finish
-        # TODO : Figure out of the STOP above is correlated
-        if "Final Answer:" in llm_output or "Job is done" in llm_output or "I have now performed all tasks" in llm_output:
-            return AgentFinish(
-                # Return values is generally always a dictionary with a single `output` key
-                # It is not recommended to try anything else at the moment :)
-                return_values={"output": llm_output.split("Final Answer:")[-1].strip()},
-                log=llm_output,
-            )
-        # Parse out the action and action input
-        regex = r"Action\s*\d*\s*:(.*?)\nAction\s*\d*\s*Input\s*\d*\s*:[\s]*(.*)"
-        match = re.search(regex, llm_output, re.DOTALL)
-        if not match:
-            raise OutputParserException(f"Could not parse LLM output: `{llm_output}`")
-        action = match.group(1).strip()
-        action_input = match.group(2)
-        # Return the action and action input
-        return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
+        print(taskList)
+        print("-"*20)
+
+        for task in taskList:
+            print("Tool Name = ",task.tool_name)
+            print("Instruction = ",task.instruction)
+            self.perform_task(task)
 
 
