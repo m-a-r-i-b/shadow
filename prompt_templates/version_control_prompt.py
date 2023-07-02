@@ -1,9 +1,10 @@
+from config import PROJ_ROOT_DIR
 from langchain.prompts.prompt import PromptTemplate
 from langchain.chains.llm_bash.prompt import BashOutputParser
 
 
 def get_prompt_template():
-    prompt_template = """If someone asks you to perform a task, your job is to come up with a series of bash commands that will perform the task. There is no need to put "#!/bin/bash" in your answer. Make sure to reason step by step, using this format:
+    template = """If someone asks you to perform a task, your job is to come up with a series of bash commands that will perform the task. There is no need to put "#!/bin/bash" in your answer. Make sure to reason step by step, using this format:
     Task: "Stage all files"
     I need to take the following actions:
     - Stage all files
@@ -49,15 +50,21 @@ def get_prompt_template():
 
     Remember that you need to commit changes before you push. And you need to stage changes before you commit.
 
-    You will also be optionally given some context, use this context to come up with an appropriate commit message or branch name when needed.
+    You will be optionally given some context, use this context to come up with an appropriate commit message or branch name when needed.
+
+    You will also be given a directory path, you need to first go to that directory and then execute commands.
 
     That is the format. Begin!
+    Directory: {root_dir}
     Context: {context}
-    Task: {question}"""
+    Task: {task}"""
 
-    # TODO : For some reason only 'question' variable is accepted, nothing else works
-    return PromptTemplate(
-        input_variables=["question","context"],
-        template=prompt_template,
+    prompt_template =  PromptTemplate(
+        input_variables=["task","context","root_dir"],
+        template=template,
         output_parser=BashOutputParser(),
     )
+
+    partial_prompt = prompt_template.partial(root_dir=PROJ_ROOT_DIR)
+
+    return partial_prompt

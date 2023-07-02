@@ -6,15 +6,10 @@ from langchain.chains import LLMBashChain
 class VersionControlTool():
     def __init__(self, llm) -> None:
         self._prompt_template = get_prompt_template()
-        self.bash_chain = LLMBashChain.from_llm(llm, verbose=True)
+        self._bash_chain = LLMBashChain.from_llm(llm, verbose=True)
 
 
-    def _execute_task(self, task, context):
-        prompt = self._prompt_template.format(question=task,context=context)
-        self.bash_chain.run(prompt)
+    def execute_task(self, task, context):
+        prompt = self._prompt_template.format(task=task,context=context)
+        self._bash_chain.run(prompt)
     
-
-    def parse_output(self, result):
-        if self.stop_string in result:
-            result = result.split(self.stop_string)[1]
-        return result

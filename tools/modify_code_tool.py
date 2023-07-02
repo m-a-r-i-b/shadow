@@ -5,7 +5,7 @@ from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 
-from config import PROJ_ROOT_DIR
+from config import PROJ_WORK_DIR
 from prompt_templates.modify_code_prompt import get_formatted_prompt
 
 class ModifyCodeTool():
@@ -17,13 +17,13 @@ class ModifyCodeTool():
     def _loadDB(self):
       embeddings = OpenAIEmbeddings(disallowed_special=())
       try :
-          db = FAISS.load_local(PROJ_ROOT_DIR, embeddings)
+          db = FAISS.load_local(PROJ_WORK_DIR, embeddings)
           print("Found local DB")
       except:
           print("Local DB not found")
 
           docs = []
-          for dirpath, dirnames, filenames in os.walk(PROJ_ROOT_DIR):
+          for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
               print(dirnames)
               for file in filenames:
                   # if file.endswith(".js") or file.endswith(".css") or file.endswith(".ts") or file.endswith(".tsx") or file.endswith(".jsx"):
@@ -44,7 +44,7 @@ class ModifyCodeTool():
           db = FAISS.from_documents(texts, embeddings)
 
           print("Saving db...")
-          db.save_local(PROJ_ROOT_DIR)
+          db.save_local(PROJ_WORK_DIR)
         
       return db
 
@@ -60,18 +60,18 @@ class ModifyCodeTool():
       return docs[0].metadata, docs[0].page_content
 
 
-    def _execute_task(self, tasklet, _):
+    def execute_task(self, tasklet, _):
         # Find relevant file to make changes to
-        filePath, fileContents = self._find_relevant_file(tasklet)
+        file_path, file_contents = self._find_relevant_file(tasklet)
         
-        print("Filepath = ",filePath)
-        print("contents = ",fileContents)
+        print("file_path = ",file_path)
+        print("contents = ",file_contents)
         # Was unable to find relevant file or grab contents
-        if (filePath or fileContents) is None:
+        if (file_path or file_contents) is None:
           print("Was unable to perform given task, maybe try again with full context of the task")
 
         # Configure prompt template
-        prompt = get_formatted_prompt(tasklet=tasklet,initial_code=fileContents)
+        prompt = get_formatted_prompt(tasklet=tasklet,initial_code=file_contents)
         
         # Get raw result and return parsed output
         raw_result = self._llm(prompt)
@@ -83,8 +83,8 @@ class ModifyCodeTool():
 
 
 
+        # TODO
         # Extract code from result and update to file
-
         # return self._parse_output(raw_result)
 
 

@@ -10,12 +10,12 @@ def get_tool_list() -> List[Tool]:
     return [
             Tool(
                 name="VersionControlTool",
-                func=VersionControlTool(OpenAI())._execute_task,
+                func=VersionControlTool(OpenAI()).execute_task,
                 description="""Use it to stage, commit or push changes to a git repo or create new branches""",
             ),
             Tool(
                 name="ModifyCodeTool",
-                func=ModifyCodeTool(ChatOpenAI())._execute_task,
+                func=ModifyCodeTool(ChatOpenAI()).execute_task,
                 description="""Use it to change an existing code file""",
             ),
         ]

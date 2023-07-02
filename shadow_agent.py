@@ -12,9 +12,6 @@ from utils import get_tool_list
 
 
 # TODO:
-# 1 - Move test app outside
-# 2 - Modify bashline to start form project prefix path
-# 3 - Modify bashline to account for history
 # 4 - Add whisper ai
 
 
