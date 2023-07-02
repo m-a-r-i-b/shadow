@@ -15,13 +15,15 @@ Use the following format:
 Task: the task you must perform
 Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
-Action Input: a part of the original instruction plus previous observation if it is relevant
+Action Input: a part of the New Task plus previous observation if it is relevant
 Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat N times)
 Thought: I have now performed all tasks
 Final Answer: the final answer to the original task
 
 Note that you can modify the Action Input and add an appropriate commit message or branch name representing the previous task, if needed.
+
+You need to stop if the task given to you has been performed completely
 
 Begin!
 
