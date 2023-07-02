@@ -26,8 +26,8 @@ class ModifyCodeTool():
           for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
               print(dirnames)
               for file in filenames:
-                  # if file.endswith(".js") or file.endswith(".css") or file.endswith(".ts") or file.endswith(".tsx") or file.endswith(".jsx"):
-                  if file.endswith(".py"):
+                  if file.endswith(".js") or file.endswith(".css") or file.endswith(".ts") or file.endswith(".tsx") or file.endswith(".jsx"):
+                  # if file.endswith(".py"):
                       try:
                           loader = TextLoader(os.path.join(dirpath, file), encoding="utf-8")
                           docs.extend(loader.load_and_split())
@@ -57,7 +57,7 @@ class ModifyCodeTool():
       if len(docs) == 0:
         return None, None
       
-      return docs[0].metadata, docs[0].page_content
+      return docs[0].metadata['source'], docs[0].page_content
 
 
     def execute_task(self, tasklet, _):

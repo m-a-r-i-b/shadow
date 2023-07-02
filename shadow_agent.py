@@ -12,6 +12,7 @@ from utils import get_tool_list
 
 
 # TODO:
+# 3 - Add code change capability
 # 4 - Add whisper ai
 
 

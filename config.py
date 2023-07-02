@@ -11,4 +11,4 @@ VERSION_CONTROL_TOOL_TEMP = 0
 
 # Project to make changes to
 PROJ_ROOT_DIR = "../test-app"
-PROJ_WORK_DIR = "../test-app/src"
+PROJ_WORK_DIR = PROJ_ROOT_DIR+"/src"
