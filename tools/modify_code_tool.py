@@ -69,9 +69,6 @@ class ModifyCodeTool():
         new_file_contents = self._parse_output(raw_result)
         print("output = ",new_file_contents)
 
-        # TODO
-        # Extract code from result and update to file
-        # return self._parse_output(raw_result)
         self._write_to_file(file_path,new_file_contents)
 
     # Vector search to return the file user is asking to modify
