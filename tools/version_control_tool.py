@@ -5,16 +5,20 @@ from langchain.chains import LLMBashChain
 
 class VersionControlTool():
     def __init__(self, llm) -> None:
-        self.bash_chain = LLMBashChain.from_llm(llm, prompt=get_prompt_template(), verbose=True)
+        self._prompt_template = get_prompt_template()
+        self.bash_chain = LLMBashChain.from_llm(llm, verbose=True)
 
         # self._prompt = get_formatted_prompt
 
 
     def _execute_task(self, task, context):
-        print("received arg = ",task)
+        print("received task = ",task)
+        print("received cont = ",context)
+
+        prompt = self._prompt_template.format(question=task,context=context)
 
         print("===Before===")
-        self.bash_chain.run(question=task,context=context)
+        self.bash_chain.run(prompt)
         print("====After===")
 
 

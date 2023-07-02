@@ -10,5 +10,5 @@ vc = tools[0].func
 prompt = 'Stage, commit and then push the code in current branch'
 context = "added decrement button"
 
-vc(question=prompt,context=context)
+vc(prompt,context)
 
