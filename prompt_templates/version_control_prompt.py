@@ -49,12 +49,15 @@ def get_prompt_template():
 
     Remember that you need to commit changes before you push. And you need to stage changes before you commit.
 
+    You will also be optionally given some context, use this context to come up with an appropriate commit message or branch name when needed.
+
     That is the format. Begin!
+    Context: {context}
     Task: {question}"""
 
     # TODO : For some reason only 'question' variable is accepted, nothing else works
     return PromptTemplate(
-        input_variables=["question"],
+        input_variables=["question","context"],
         template=prompt_template,
         output_parser=BashOutputParser(),
     )

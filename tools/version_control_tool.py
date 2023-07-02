@@ -10,11 +10,11 @@ class VersionControlTool():
         # self._prompt = get_formatted_prompt
 
 
-    def _execute_task(self, tasklet):
-        print("received arg = ",tasklet)
+    def _execute_task(self, task, context):
+        print("received arg = ",task)
 
         print("===Before===")
-        self.bash_chain.run(tasklet)
+        self.bash_chain.run(question=task,context=context)
         print("====After===")
 
 

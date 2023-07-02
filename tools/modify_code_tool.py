@@ -60,7 +60,7 @@ class ModifyCodeTool():
       return docs[0].metadata, docs[0].page_content
 
 
-    def _execute_task(self, tasklet):
+    def _execute_task(self, tasklet, _):
         # Find relevant file to make changes to
         filePath, fileContents = self._find_relevant_file(tasklet)
         
