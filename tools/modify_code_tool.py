@@ -5,9 +5,9 @@ from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 
-from config import PROJ_WORK_DIR
+from config import PROJ_WORK_DIR, ACCEPTABLE_FILE_TYPES
 from prompt_templates.modify_code_prompt import get_formatted_prompt
-from utils import acceptable_file_type
+from utils import is_acceptable_file_type
 
 class ModifyCodeTool():
     def __init__(self, llm) -> None:
@@ -18,7 +18,7 @@ class ModifyCodeTool():
     def _loadDB(self):
         embeddings = OpenAIEmbeddings(disallowed_special=())
         try :
-            db = FAISS.load_local(PROJ_WORK_DIR, embeddings)
+            db = FAISS.load_local("dsadsaaaaa", embeddings)
             print("Found local DB")
         except:
             print("Local DB not found")
@@ -27,7 +27,7 @@ class ModifyCodeTool():
             for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
                 print(dirnames)
                 for file in filenames:
-                    if acceptable_file_type(file):
+                    if is_acceptable_file_type(file, ACCEPTABLE_FILE_TYPES):
                         try:
                             loader = TextLoader(os.path.join(dirpath, file), encoding="utf-8")
                             docs.extend(loader.load_and_split())
