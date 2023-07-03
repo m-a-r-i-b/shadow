@@ -54,10 +54,15 @@ class ShadowAgent:
         tool(instruction, self._context)
 
 
-    def execute(self,instructions):
+    def _split_into_tasks(self, instructions:str):
         _input = self._prompt_template.format(instruction=instructions)
         output = self._llm(_input)
         task_list: TaskList = self._parser.parse(output)
+        return task_list
+
+
+    def execute(self,instructions):
+        task_list = self._split_into_tasks(instructions)
 
         print(task_list)
         print("="*20)
