@@ -1,7 +1,9 @@
+import os
 from typing import List
 from models.Task import Task
 from models.TaskList import TaskList
 from prompt_templates.shadow_template import get_prompt_template
+import openai
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
@@ -10,12 +12,7 @@ from langchain.agents import Tool
 from tools.ModifyCodeTool import ModifyCodeTool
 from tools.VersionControlTool import VersionControlTool
 
-
 from config import SHADOW_AGENT_TEMP, SHADOW_AGENT_LLM
-
-# TODO:
-# 4 - Add whisper ai
-# 4 - Test on python proj
 
 
 class ShadowAgent:
@@ -61,7 +58,24 @@ class ShadowAgent:
         return task_list
 
 
-    def execute(self,instructions):
+    def _get_text_from_audio(self,audio_file) -> str:
+        # For some reason need to explicitly do this for openai.Audio, even tho dotenv is being loaded
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        print("Generating transcriptions...")
+        transcript = openai.Audio.transcribe("whisper-1", audio_file)
+        return transcript.text
+
+    def execute(self,text_instructions=None, audio_instructions=None):
+
+        if text_instructions is None and audio_instructions is None:
+            print("No instructions to exectue..")
+
+        if audio_instructions:
+            instructions = self._get_text_from_audio(audio_instructions)
+
+        if text_instructions:
+            instructions = text_instructions
+        
         task_list = self._split_into_tasks(instructions)
 
         print(task_list)

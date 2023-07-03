@@ -17,13 +17,4 @@ def get_audio_input(duration=6):
     sd.wait()
     sf.write(AUDIO_FILE_PATH, audio, sample_rate)
     audio_file = open(AUDIO_FILE_PATH, "rb")
-    import openai
-    # For some reason need to explicitly do this for openai.Audio, even tho dotenv is being loaded
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-    print("Generating transcriptions...")
-    transcript = openai.Audio.transcribe("whisper-1", audio_file)
-
-    # Remove saved audio file when transcription is done
-    os.remove(AUDIO_FILE_PATH)
-
-    return transcript.text
+    return audio_file
