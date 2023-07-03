@@ -12,8 +12,6 @@ from tools.VersionControlTool import VersionControlTool
 
 
 from config import SHADOW_AGENT_TEMP, SHADOW_AGENT_LLM
-from utils import get_tool_list
-
 
 # TODO:
 # 4 - Add whisper ai
@@ -23,7 +21,7 @@ from utils import get_tool_list
 class ShadowAgent:
     def __init__(self) -> None:
         self._llm = OpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
-        self._tools : List[Tool] = get_tool_list()
+        self._tools : List[Tool] = self._get_tool_list()
         self._parser = PydanticOutputParser(pydantic_object=TaskList)
         self._prompt_template = get_prompt_template(self._tools,self._parser)
         self._context = ""
