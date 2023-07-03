@@ -7,6 +7,7 @@ from langchain.vectorstores import FAISS
 
 from config import PROJ_WORK_DIR
 from prompt_templates.modify_code_prompt import get_formatted_prompt
+from utils import acceptable_file_type
 
 class ModifyCodeTool():
     def __init__(self, llm) -> None:
@@ -26,9 +27,7 @@ class ModifyCodeTool():
             for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
                 print(dirnames)
                 for file in filenames:
-                    # TODO : Make language agnostic
-                    if file.endswith(".js") or file.endswith(".css") or file.endswith(".ts") or file.endswith(".tsx") or file.endswith(".jsx"):
-                      # if file.endswith(".py"):
+                    if acceptable_file_type(file):
                         try:
                             loader = TextLoader(os.path.join(dirpath, file), encoding="utf-8")
                             docs.extend(loader.load_and_split())

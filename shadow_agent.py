@@ -13,6 +13,7 @@ from utils import get_tool_list
 
 # TODO:
 # 4 - Add whisper ai
+# 4 - Test on python proj
 
 
 class ShadowAgent:
