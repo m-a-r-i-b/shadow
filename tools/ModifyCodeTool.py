@@ -17,22 +17,17 @@ class ModifyCodeTool():
 
     def _loadDB(self):
         embeddings = OpenAIEmbeddings(disallowed_special=())
-        try :
-            db = FAISS.load_local(PROJ_WORK_DIR, embeddings)
-            print("Found local DB")
-        except:
-            print("Local DB not found")
-
-            docs = []
-            for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
-                print(dirnames)
-                for file in filenames:
-                    if is_acceptable_file_type(file):
-                        try:
-                            loader = TextLoader(os.path.join(dirpath, file), encoding="utf-8")
-                            docs.extend(loader.load_and_split())
-                        except Exception as e:
-                          pass
+        # TODO : Re-load only the changed files, as opposed to re-calculating embeddings for every file everytime
+        docs = []
+        for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
+            print(dirnames)
+            for file in filenames:
+                if is_acceptable_file_type(file):
+                    try:
+                        loader = TextLoader(os.path.join(dirpath, file), encoding="utf-8")
+                        docs.extend(loader.load_and_split())
+                    except Exception as e:
+                        pass
             print(f"Total docs found : {len(docs)}")
 
             print("Starting chunking...")
