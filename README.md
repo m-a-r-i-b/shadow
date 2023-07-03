@@ -8,7 +8,9 @@ The long term vision of this project is to add a multi-tenant layer on top of it
 ### Demo
 
 
-https://github.com/m-a-r-i-b/shadow/assets/77619505/248bd3d8-b28d-4003-bc67-107298e8fc01
+https://github.com/m-a-r-i-b/shadow/assets/77619505/0abbd811-005e-4988-ab25-b7896f61b0aa
+
+
 
 
 
