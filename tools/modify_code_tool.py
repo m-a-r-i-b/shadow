@@ -15,37 +15,38 @@ class ModifyCodeTool():
 
 
     def _loadDB(self):
-      embeddings = OpenAIEmbeddings(disallowed_special=())
-      try :
-          db = FAISS.load_local(PROJ_WORK_DIR, embeddings)
-          print("Found local DB")
-      except:
-          print("Local DB not found")
+        embeddings = OpenAIEmbeddings(disallowed_special=())
+        try :
+            db = FAISS.load_local(PROJ_WORK_DIR, embeddings)
+            print("Found local DB")
+        except:
+            print("Local DB not found")
 
-          docs = []
-          for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
-              print(dirnames)
-              for file in filenames:
-                  if file.endswith(".js") or file.endswith(".css") or file.endswith(".ts") or file.endswith(".tsx") or file.endswith(".jsx"):
-                  # if file.endswith(".py"):
-                      try:
-                          loader = TextLoader(os.path.join(dirpath, file), encoding="utf-8")
-                          docs.extend(loader.load_and_split())
-                      except Exception as e:
+            docs = []
+            for dirpath, dirnames, filenames in os.walk(PROJ_WORK_DIR):
+                print(dirnames)
+                for file in filenames:
+                    # TODO : Make language agnostic
+                    if file.endswith(".js") or file.endswith(".css") or file.endswith(".ts") or file.endswith(".tsx") or file.endswith(".jsx"):
+                      # if file.endswith(".py"):
+                        try:
+                            loader = TextLoader(os.path.join(dirpath, file), encoding="utf-8")
+                            docs.extend(loader.load_and_split())
+                        except Exception as e:
                           pass
-          print(f"Total docs found : {len(docs)}")
+            print(f"Total docs found : {len(docs)}")
 
-          print("Starting chunking...")
-          text_splitter = CharacterTextSplitter(chunk_size=4000, chunk_overlap=0)
-          texts = text_splitter.split_documents(docs)
+            print("Starting chunking...")
+            text_splitter = CharacterTextSplitter(chunk_size=4000, chunk_overlap=0)
+            texts = text_splitter.split_documents(docs)
 
-          print("Creating db...")
-          db = FAISS.from_documents(texts, embeddings)
+            print("Creating db...")
+            db = FAISS.from_documents(texts, embeddings)
 
-          print("Saving db...")
-          db.save_local(PROJ_WORK_DIR)
+            print("Saving db...")
+            db.save_local(PROJ_WORK_DIR)
         
-      return db
+        return db
 
 
     def execute_task(self, tasklet, _):
@@ -56,7 +57,7 @@ class ModifyCodeTool():
         print("contents = ",file_contents)
         # Was unable to find relevant file or grab contents
         if (file_path or file_contents) is None:
-          print("Was unable to perform given task, maybe try again with full context of the task")
+            print("Was unable to perform given task, maybe try again with full context of the task")
 
         # Configure prompt template
         prompt = get_formatted_prompt(tasklet=tasklet,initial_code=file_contents)
@@ -74,12 +75,12 @@ class ModifyCodeTool():
     # Vector search to return the file user is asking to modify
     # TODO : Maybe change to RetrivalChain? for better context understanding
     def _find_relevant_file(self, user_query: str):
-      docs = self._db.similarity_search(user_query)
+        docs = self._db.similarity_search(user_query)
       
-      if len(docs) == 0:
-        return None, None
+        if len(docs) == 0:
+            return None, None
       
-      return docs[0].metadata['source'], docs[0].page_content
+        return docs[0].metadata['source'], docs[0].page_content
 
 
     def _parse_output(self, result):
