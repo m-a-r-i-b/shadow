@@ -1,89 +1,72 @@
-from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent, AgentOutputParser
-from langchain.prompts import StringPromptTemplate
-from langchain import SerpAPIWrapper, LLMChain
-from typing import List, Union
-from langchain.schema import AgentAction, AgentFinish, OutputParserException
-import re
-from prompt_templates.shadow_prompt import get_prompt_template
-from tools.modify_code_tool import ModifyCodeTool
-from tools.version_control_tool import VersionControlTool
-from langchain.chat_models import ChatOpenAI
+from typing import List
+from models.Task import Task
+from models.TaskList import TaskList
+from prompt_templates.shadow_template import get_prompt_template
 from langchain.llms import OpenAI
-from langchain.agents import initialize_agent, AgentType
-from langchain.memory import ConversationBufferWindowMemory
+from langchain.chat_models import ChatOpenAI
+from langchain.output_parsers import PydanticOutputParser
+from langchain.agents import Tool
+
+from tools.ModifyCodeTool import ModifyCodeTool
+from tools.VersionControlTool import VersionControlTool
 
 
-from config import MODIFY_CODE_TOOL_LLM, MODIFY_CODE_TOOL_TEMP, SHADOW_AGENT_TEMP, SHADOW_AGENT_LLM, VERSION_CONTROL_TOOL_LLM, VERSION_CONTROL_TOOL_TEMP
+from config import SHADOW_AGENT_TEMP, SHADOW_AGENT_LLM
+
+# TODO:
+# 4 - Add whisper ai
+# 4 - Test on python proj
 
 
 class ShadowAgent:
     def __init__(self) -> None:
+        self._llm = OpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
+        self._tools : List[Tool] = self._get_tool_list()
+        self._parser = PydanticOutputParser(pydantic_object=TaskList)
+        self._prompt_template = get_prompt_template(self._tools,self._parser)
+        self._context = ""
 
-        # llm = OpenAI(model=SHADOW_AGENT_LLM)
-        llm = ChatOpenAI(temperature=SHADOW_AGENT_TEMP, model=SHADOW_AGENT_LLM)
-        output_parser = CustomOutputParser()
-
-        tools = self.get_tools()
-
-        # LLM chain consisting of the LLM and a prompt
-        llm_chain = LLMChain(llm=llm, prompt=get_prompt_template(tools), verbose=True)
-        tool_names = [tool.name for tool in tools]
-        memory = ConversationBufferWindowMemory(k=2)
-
-
-        agent_template = LLMSingleActionAgent(
-            llm_chain=llm_chain,
-            output_parser=output_parser,
-            # TODO : Figure out if this STOP and AGENTFINISH are correlated
-            stop=["\nObservation:"],
-            allowed_tools=tool_names
-        )
-
-        self._agent = AgentExecutor.from_agent_and_tools(
-            agent=agent_template, tools=tools, verbose=True,memory=memory)
-
-
-    def run(self,task):
-        self._agent.run(task)
-
-
-    def get_tools(self):
+    def _get_tool_list(self) -> List[Tool]:
         return [
-        Tool(
-            name="VersionControlTool",
-            func=VersionControlTool(OpenAI())._execute_task,
-            description="""Use it to commit changes to a git repo or create new git branches""",
-        ),
-        Tool(
-            name="ModifyCodeTool",
-            func=ModifyCodeTool(ChatOpenAI())._execute_task,
-            description="""Use it to change an existing code file""",
-        ),
+            Tool(
+                name="VersionControlTool",
+                func=VersionControlTool(OpenAI()).execute_task,
+                description="""Use it to stage, commit or push changes to a git repo or create new branches""",
+            ),
+            Tool(
+                name="ModifyCodeTool",
+                func=ModifyCodeTool(ChatOpenAI()).execute_task,
+                description="""Use it to change an existing code file""",
+            ),
         ]
 
 
+    def _get_tool(self, tool_name: str):
+        for tool in self._tools:
+            if tool.name.strip() == tool_name.strip():
+                return tool.func
 
 
-class CustomOutputParser(AgentOutputParser):
+    def _perform_task(self, task: Task):
+        tool_name = task.tool_name
+        tool = self._get_tool(tool_name)
+        instruction = task.instruction
+        tool(instruction, self._context)
 
-    def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
-        # Check if agent should finish
-        # TODO : Figure out of the STOP above is correlated
-        if "Final Answer:" in llm_output or "Job is done" in llm_output or "I have now performed all tasks" in llm_output:
-            return AgentFinish(
-                # Return values is generally always a dictionary with a single `output` key
-                # It is not recommended to try anything else at the moment :)
-                return_values={"output": llm_output.split("Final Answer:")[-1].strip()},
-                log=llm_output,
-            )
-        # Parse out the action and action input
-        regex = r"Action\s*\d*\s*:(.*?)\nAction\s*\d*\s*Input\s*\d*\s*:[\s]*(.*)"
-        match = re.search(regex, llm_output, re.DOTALL)
-        if not match:
-            raise OutputParserException(f"Could not parse LLM output: `{llm_output}`")
-        action = match.group(1).strip()
-        action_input = match.group(2)
-        # Return the action and action input
-        return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
+
+    def execute(self,instructions):
+        _input = self._prompt_template.format(instruction=instructions)
+        output = self._llm(_input)
+        task_list: TaskList = self._parser.parse(output)
+
+        print(task_list)
+        print("="*20)
+
+        for task in task_list:
+            print("-"*20)
+            print("Tool Name = ",task.tool_name)
+            print("Instruction = ",task.instruction)
+            self._perform_task(task)
+            self._context += task.instruction+"\n"
 
 
