@@ -1,6 +1,4 @@
-from prompt_templates.version_control_prompt import get_prompt_template
-from prompt_templates.modify_code_prompt import get_formatted_prompt
-import time
+from prompt_templates.version_control_template import get_prompt_template
 from langchain.chains import LLMBashChain
 
 class VersionControlTool():

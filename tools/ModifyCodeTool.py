@@ -6,7 +6,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 
 from config import PROJ_WORK_DIR, ACCEPTABLE_FILE_TYPES
-from prompt_templates.modify_code_prompt import get_formatted_prompt
+from prompt_templates.modify_code_template import get_formatted_prompt
 from utils import is_acceptable_file_type
 
 class ModifyCodeTool():
