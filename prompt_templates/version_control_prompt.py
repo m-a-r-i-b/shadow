@@ -48,9 +48,22 @@ def get_prompt_template():
     git push --set-upstream origin test-branch
     ```
 
+    Task: "Push all changes or files"
+    I need to take the following actions:
+    - Push all changes
+    - Commit the changes with an appropriate message '<message_here>'
+    - Push the changes to existing branch
+    ```bash
+    git add .
+    git commit -m "<messaeg_here>"
+    git push
+    ```
+
     Remember that you need to commit changes before you push. And you need to stage changes before you commit.
 
-    You will be optionally given some context, use this context to come up with an appropriate commit message or branch name when needed.
+    You will be optionally given some context, use this context to come up with an appropriate commit message or branch name if needed.
+
+    Do not create a new branch unless asked to, if no branch is specified simply do "git push" i.e. push without specifying a branch.
 
     You will also be given a directory path, you need to first go to that directory and then execute commands.
 

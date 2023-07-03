@@ -42,9 +42,10 @@ class ShadowAgent:
         task_list: TaskList = self._parser.parse(output)
 
         print(task_list)
-        print("-"*20)
+        print("="*20)
 
         for task in task_list:
+            print("-"*20)
             print("Tool Name = ",task.tool_name)
             print("Instruction = ",task.instruction)
             self.perform_task(task)
