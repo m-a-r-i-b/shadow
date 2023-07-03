@@ -1,11 +1,15 @@
 
-# Shadow <img src="https://thumb.ac-illust.com/c2/c25502023f3a96f2d8726f52b6373c20_t.jpeg" width="50" height="50" />
+# Shadow <img src="https://github.com/m-a-r-i-b/shadow/blob/main/assets/icon.png" width="50" height="50" />
 Shadow is an Ai agent, built with LangChain, capable of performing code changes and version control. It accepts English instructions in text or audio format.
 
 The long term vision of this project is to add a multi-tenant layer on top of it and expose it as a service. (Basically Code as a Service)
 
 
 ### Demo
+
+
+https://github.com/m-a-r-i-b/shadow/assets/77619505/248bd3d8-b28d-4003-bc67-107298e8fc01
+
 
 
 ### High Level Architecture
