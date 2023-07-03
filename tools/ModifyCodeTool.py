@@ -18,7 +18,7 @@ class ModifyCodeTool():
     def _loadDB(self):
         embeddings = OpenAIEmbeddings(disallowed_special=())
         try :
-            db = FAISS.load_local("dsadsaadsadsaaaa", embeddings)
+            db = FAISS.load_local(PROJ_WORK_DIR, embeddings)
             print("Found local DB")
         except:
             print("Local DB not found")
