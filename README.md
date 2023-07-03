@@ -16,7 +16,7 @@ https://github.com/m-a-r-i-b/shadow/assets/77619505/0abbd811-005e-4988-ab25-b789
 
 ### High Level Architecture
 
-<img src="https://github.com/m-a-r-i-b/shadow/blob/main/assets/high-level-architecture-diagram" width="350" height="550" />
+<img src="https://github.com/m-a-r-i-b/shadow/blob/main/assets/high-level-architecture-diagram.png" width="550" height="650" />
 
 
 ### TODO
