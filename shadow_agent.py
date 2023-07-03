@@ -76,6 +76,8 @@ class ShadowAgent:
         if text_instructions:
             instructions = text_instructions
         
+        print("Instructions received : ",instructions)
+
         task_list = self._split_into_tasks(instructions)
 
         print(task_list)
@@ -85,7 +87,7 @@ class ShadowAgent:
             print("-"*20)
             print("Tool Name = ",task.tool_name)
             print("Instruction = ",task.instruction)
-            # self._perform_task(task)
+            self._perform_task(task)
             self._context += task.instruction+"\n"
 
 
