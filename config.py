@@ -22,3 +22,8 @@ ACCEPTABLE_FILE_TYPES = [
     ".scss",
     ".py",
 ]
+
+# OPERATION_MODE = "TEXT"
+OPERATION_MODE = "AUDIO"
+
+AUDIO_FILE_PATH = "aduio_instructions.wav"
