@@ -1,6 +1,6 @@
 
 # <img src="https://github.com/m-a-r-i-b/shadow/blob/main/assets/shadow-icon.png" width="50" height="50" /> Shadow
-Shadow is an Ai agent, built with LangChain, capable of performing code changes and version control. It accepts English instructions in text or audio format.
+Shadow is an Ai agent, built with LangChain, capable of performing coding and version control tasks. It accepts English instructions in text or audio format.
 
 The long term vision of this project is to add a multi-tenant layer on top of it and expose it as a service. (Basically Code as a Service)
 
